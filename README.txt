@@ -9,7 +9,7 @@ Group Members & Email Addresses:
 Versioning
 ==========
 
-Github Link: 
+Github Link: https://github.com/hjbr22/Pong-Project
 
 General Info
 ============
