@@ -3,8 +3,9 @@ Contact Info
 
 Group Members & Email Addresses:
 
-    Person 1, person1@uky.edu
-    Person 2, person2@uky.edu
+    Hunter Brogna, hjbr230@uky.edu
+    Ryan Ennis, ryan.ennis@uky.edu
+    Evan Damron, evan.damron@uky.edu
 
 Versioning
 ==========
@@ -21,6 +22,10 @@ Install Instructions
 Run the following line to install the required libraries for this project:
 
 `pip3 install -r requirements.txt`
+
+Run the following command line to run the game
+
+'python3 pong/pongClient.py'
 
 Known Bugs
 ==========
