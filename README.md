@@ -25,7 +25,7 @@ Run the following line to install the required libraries for this project:
 
 Run the following command line to run the game
 
-'python3 pong/pongClient.py'
+`python3 pong/pongClient.py`
 
 Known Bugs
 ==========
