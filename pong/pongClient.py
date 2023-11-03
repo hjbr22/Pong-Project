@@ -1,8 +1,8 @@
 # =================================================================================================
 # Contributing Authors:	    Ryan Ennis, Hunter Brogna, Evan Damron
 # Email Addresses:          ryan.ennis@uky.edu, hjbr230@uky.edu, evan.damron@uky.edu
-# Date:                     10/29/2023
-# Purpose:                  Updated file locations so it can run properly.
+# Date:                     11/02/2023
+# Purpose:                  Started planning out encoding/decoding formatting
 # Misc:                     <Not Required.  Anything else you might want to include>
 # =================================================================================================
 
@@ -84,6 +84,13 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         # where the ball is and the current score.
         # Feel free to change when the score is updated to suit your needs/requirements
         
+        # NOTES FROM RYAN: Things that will probably be encoded and sent to server & decoded and receieved from server
+        # 
+        # paddle.moving seems to be the info on paddles movement (shocker)
+        # lscore and rscore are each players score
+        # sync variable will be used to sync up clients when they... get out of sync
+        # i dont know exactly what will be used to hold the balls position info
+        # END OF RYANS NOTES
         
         # =========================================================================================
 
