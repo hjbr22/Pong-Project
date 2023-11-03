@@ -173,29 +173,41 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
 # If you want to hard code the screen's dimensions into the code, that's fine, but you will need to know
 # which client is which
 def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
-    # Purpose:      This method is fired when the join button is clicked
-    # Arguments:
-    # ip            A string holding the IP address of the server
-    # port          A string holding the port the server is using
-    # errorLabel    A tk label widget, modify it's text to display messages to the user (example below)
-    # app           The tk window object, needed to kill the window
-    
-    # Create a socket and connect to the server
-    # You don't have to use SOCK_STREAM, use what you think is best
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:   # Purpose:      This method is fired when the join button is clicked
+        # Arguments:
+        # ip            A string holding the IP address of the server
+        # port          A string holding the port the server is using
+        # errorLabel    A tk label widget, modify it's text to display messages to the user (example below)
+        # app           The tk window object, needed to kill the window
+        
+        # Create a socket and connect to the server
+        # You don't have to use SOCK_STREAM, use what you think is best
+        client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        client.connect((ip, int(port)))
 
-    # Get the required information from your server (screen width, height & player paddle, "left or "right)
+        # Inform the server that a new client is connecting
+        client.send("JOIN".encode())
 
+        
+        #Get the required information from the server (screen width, height & player paddle, "left" or "right")
+        server_data = client.recv(1024).decode().split(",")
+        screenWidth, screenHeight, playerPaddle = map(str, server_data)
 
-    # If you have messages you'd like to show the user use the errorLabel widget like so
-    errorLabel.config(text=f"Some update text. You input: IP: {ip}, Port: {port}")
-    # You may or may not need to call this, depending on how many times you update the label
-    errorLabel.update()     
+        # If you have messages you'd like to show the user use the errorLabel widget like so
+        errorLabel.config(text=f"Connected to the server.\nScreen Width: {screenWidth}, Screen Height: {screenHeight}")
+        # You may or may not need to call this, depending on how many times you update the label
+        errorLabel.update()     
 
-    # Close this window and start the game with the info passed to you from the server
-    #app.withdraw()     # Hides the window (we'll kill it later)
-    #playGame(screenWidth, screenHeight, ("left"|"right"), client)  # User will be either left or right paddle
-    #app.quit()         # Kills the window
+        # Close this window and start the game with the info passed to you from the server
+        app.withdraw()     # Hides the window (we'll kill it later)
+        playGame(screenWidth, screenHeight, playerPaddle, client)  # User will be either left or right paddle
+        app.quit()         # Kills the window
+    except ConnectionRefusedError:
+        errorLabel.config(text="Connection to the server failed. Please check the IP and Port.")
+        errorLabel.update()
+    except Exception as e:
+        errorLabel.config(text=f"An error occurred: {str(e)}")
+        errorLabel.update()
 
 
 # This displays the opening screen, you don't need to edit this (but may if you like)
