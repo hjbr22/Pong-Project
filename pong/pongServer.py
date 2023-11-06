@@ -2,7 +2,7 @@
 # Contributing Authors:	    Ryan Ennis
 # Email Addresses:          ryan.ennis@uky.edu
 # Date:                     11/05/2023
-# Purpose:                  Completed thread functions
+# Purpose:                  Completed default settings for clients
 # Misc:                     <Not Required.  Anything else you might want to include>
 # =================================================================================================
 
@@ -16,16 +16,6 @@ import threading
 # I suggest you use the sync variable in pongClient.py to determine how out of sync your two
 # clients are and take actions to resync the games
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)      # Creating the server
-
-server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)    # Working on localhost
-
-server.bind(("localhost", 64920))
-server.listen(2)
-
-client1Socket, client1Address = server.accept() # accept client 1 connection
-client2Socket, client2Address = server.accept() # accept client 2 connection
-
 def f1(client1Socket, client2Socket):
     msg = ""
     msg = client1Socket.recv(1024)  # receive info from client1
@@ -37,18 +27,51 @@ def f2(client2Socket, client1Socket):
     msg = client2Socket.recv(1024)  # receive info from client1
     client1Socket.send(msg)         # send client1 info to client2
 
-while True:
-    thread1 = threading.Thread(target = f1, args = (client1Socket, client2Socket))
-    thread2 = threading.Thread(target = f2, args = (client2Socket, client1Socket))
+if __name__ == "__main__":
 
-    #Start threads
-    thread1.start()
-    thread2.start()
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)#DGRAM)      # Creating the server
 
-    #Wait for threads to each finish
-    thread1.join()
-    thread2.join()
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)    # Working on localhost
 
-client1Socket.close()
-client2Socket.close()
-server.close()
+    server.bind(("localhost", 64920))
+    server.listen(2)
+    print("test")
+    # accept client 1 connection
+    client1Socket, client1Address = server.accept()
+
+    # Assign playside and default settings to client1
+    c1join = ""
+    c1join = client1Socket.recv(1024).decode()
+
+    if c1join == "JOIN":
+        print("CLIENT1 JOINED") # debugging reference
+        c1default = "640,480,left"
+        client1Socket.send(c1default.encode())
+
+    # accept client 2 connection
+    client2Socket, client2Address = server.accept() 
+    
+    # Assign playside and default settings to client2
+    c2join = ""
+    c2join = client2Socket.recv(1024).decode()
+
+    if c2join == "JOIN":
+        print("CLIENT2 JOINED") # debugging reference
+        c2default = "640,480,right"
+        client2Socket.send(c2default.encode())
+
+    while True:
+        thread1 = threading.Thread(target = f1, args = (client1Socket, client2Socket))
+        thread2 = threading.Thread(target = f2, args = (client2Socket, client1Socket))
+
+        #Start threads
+        thread1.start()
+        thread2.start()
+
+        #Wait for threads to each finish
+        thread1.join()
+        thread2.join()
+
+    client1Socket.close()
+    client2Socket.close()
+    server.close()

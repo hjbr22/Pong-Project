@@ -182,13 +182,11 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
         
         # Create a socket and connect to the server
         # You don't have to use SOCK_STREAM, use what you think is best
-        client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)#DGRAM)
         client.connect((ip, int(port)))
-
         # Inform the server that a new client is connecting
         client.send("JOIN".encode())
-
-        
+        print("CLIENT JOIN")    # debugging reference
         #Get the required information from the server (screen width, height & player paddle, "left" or "right")
         server_data = client.recv(1024).decode().split(",")
         screenWidth, screenHeight, playerPaddle = map(str, server_data)
@@ -247,3 +245,4 @@ if __name__ == "__main__":
     # the startScreen() function should call playGame with the arguments given to it by the server this is
     # here for demo purposes only
     playGame(640, 480,"left",socket.socket(socket.AF_INET, socket.SOCK_STREAM))
+    #joinServer("localhost", "64920", tk.Label(text=""), tk.Tk())
