@@ -17,12 +17,14 @@ import threading
 # clients are and take actions to resync the games
 
 def f1(client1Socket, client2Socket):
+    print("f1 FUNCTION TEST")   # debugging reference
     msg = ""
     msg = client1Socket.recv(1024)  # receive info from client1
     client2Socket.send(msg)         # send client1 info to client2
 
 
 def f2(client2Socket, client1Socket):
+    print("f2 FUNCTION TEST")   # debugging reference
     msg = ""
     msg = client2Socket.recv(1024)  # receive info from client1
     client1Socket.send(msg)         # send client1 info to client2
