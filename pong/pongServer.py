@@ -1,8 +1,8 @@
 # =================================================================================================
 # Contributing Authors:	    Ryan Ennis
 # Email Addresses:          ryan.ennis@uky.edu
-# Date:                     11/02/2023
-# Purpose:                  laid out threading for clients
+# Date:                     11/05/2023
+# Purpose:                  Completed thread functions
 # Misc:                     <Not Required.  Anything else you might want to include>
 # =================================================================================================
 
@@ -23,18 +23,23 @@ server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)    # Working on loc
 server.bind(("localhost", 64920))
 server.listen(2)
 
-player1Socket, player1Address = server.accept() # accept player 1 connection
-player2Socket, player2Address = server.accept() # accept player 2 connection
+client1Socket, client1Address = server.accept() # accept client 1 connection
+client2Socket, client2Address = server.accept() # accept client 2 connection
 
-def f1(player1Socket):
-    test = 0 # does nothing but clears errors
+def f1(client1Socket, client2Socket):
+    msg = ""
+    msg = client1Socket.recv(1024)  # receive info from client1
+    client2Socket.send(msg)         # send client1 info to client2
 
-def f2(player2Socket):
-    test = 0 # does nothing but clears errors
+
+def f2(client2Socket, client1Socket):
+    msg = ""
+    msg = client2Socket.recv(1024)  # receive info from client1
+    client1Socket.send(msg)         # send client1 info to client2
 
 while True:
-    thread1 = threading.Thread(target = f1, args = (player1Socket,))
-    thread2 = threading.Thread(target = f2, args = (player2Socket,))
+    thread1 = threading.Thread(target = f1, args = (client1Socket, client2Socket))
+    thread2 = threading.Thread(target = f2, args = (client2Socket, client1Socket))
 
     #Start threads
     thread1.start()
@@ -44,6 +49,6 @@ while True:
     thread1.join()
     thread2.join()
 
-player1Socket.close()
-player2Socket.close()
+client1Socket.close()
+client2Socket.close()
 server.close()
