@@ -24,10 +24,15 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
 
     # Constants
     WHITE = (255,255,255)
+    print("playgame 1.1")
     clock = pygame.time.Clock()
+    print("playgame 1.2")
     scoreFont = pygame.font.Font("./assets/fonts/pong-score.ttf", 32)
+    print("playgame 1.3")
     winFont = pygame.font.Font("./assets/fonts/visitor.ttf", 48)
+    print("playgame 1.4")
     pointSound = pygame.mixer.Sound("./assets/sounds/point.wav")
+    print("playgame 1.5")
     bounceSound = pygame.mixer.Sound("./assets/sounds/bounce.wav")
 
     # Display objects
@@ -202,7 +207,7 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
         # If you have messages you'd like to show the user use the errorLabel widget like so
         errorLabel.config(text=f"Connected to the server.\nScreen Width: {screenWidth}, Screen Height: {screenHeight}")
         # You may or may not need to call this, depending on how many times you update the label
-        errorLabel.update()     
+       # errorLabel.update()
         # Close this window and start the game with the info passed to you from the server
         app.withdraw()     # Hides the window (we'll kill it later)
         playGame(screenWidth, screenHeight, playerPaddle, client)  # User will be either left or right paddle
@@ -251,5 +256,5 @@ if __name__ == "__main__":
     # Uncomment the line below if you want to play the game without a server to see how it should work
     # the startScreen() function should call playGame with the arguments given to it by the server this is
     # here for demo purposes only
-    playGame(640, 480,"left",socket.socket(socket.AF_INET, socket.SOCK_STREAM))
-    #joinServer("localhost", "64920", tk.Label(text=""), tk.Tk())
+    #playGame(640, 480,"left",socket.socket(socket.AF_INET, socket.SOCK_STREAM))
+    joinServer("localhost", "64920", tk.Label(text=""), tk.Tk())

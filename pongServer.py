@@ -16,11 +16,15 @@ import threading
 # I suggest you use the sync variable in pongClient.py to determine how out of sync your two
 # clients are and take actions to resync the games
 
+c1Sync = 0
+c2Sync = 0
+
 def f1(client1Socket, client2Socket):
     while True:
         print("f1 FUNCTION TEST")   # debugging reference
         msg = ""
-        msg = client1Socket.recv(1024)  # receive info from client1
+        msg = client1Socket.recv(1024).decode().split("/")  # receive info from client1
+        c1Sync,  = map(str, msg)
         client2Socket.send(msg)         # send client1 info to client2
 
 
