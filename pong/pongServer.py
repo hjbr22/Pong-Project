@@ -1,8 +1,8 @@
 # =================================================================================================
 # Contributing Authors:	    Ryan Ennis
 # Email Addresses:          ryan.ennis@uky.edu
-# Date:                     11/05/2023
-# Purpose:                  Completed default settings for clients
+# Date:                     11/12/2023
+# Purpose:                  Redid while loops
 # Misc:                     <Not Required.  Anything else you might want to include>
 # =================================================================================================
 
@@ -17,17 +17,19 @@ import threading
 # clients are and take actions to resync the games
 
 def f1(client1Socket, client2Socket):
-    print("f1 FUNCTION TEST")   # debugging reference
-    msg = ""
-    msg = client1Socket.recv(1024)  # receive info from client1
-    client2Socket.send(msg)         # send client1 info to client2
+    while True:
+        print("f1 FUNCTION TEST")   # debugging reference
+        msg = ""
+        msg = client1Socket.recv(1024)  # receive info from client1
+        client2Socket.send(msg)         # send client1 info to client2
 
 
 def f2(client2Socket, client1Socket):
-    print("f2 FUNCTION TEST")   # debugging reference
-    msg = ""
-    msg = client2Socket.recv(1024)  # receive info from client1
-    client1Socket.send(msg)         # send client1 info to client2
+    while True:
+        print("f2 FUNCTION TEST")   # debugging reference
+        msg = ""
+        msg = client2Socket.recv(1024)  # receive info from client1
+        client1Socket.send(msg)         # send client1 info to client2
 
 if __name__ == "__main__":
 
@@ -62,17 +64,16 @@ if __name__ == "__main__":
         c2default = "640,480,right"
         client2Socket.send(c2default.encode())
 
-    while True:
-        thread1 = threading.Thread(target = f1, args = (client1Socket, client2Socket))
-        thread2 = threading.Thread(target = f2, args = (client2Socket, client1Socket))
+    thread1 = threading.Thread(target = f1, args = (client1Socket, client2Socket))
+    thread2 = threading.Thread(target = f2, args = (client2Socket, client1Socket))
 
-        #Start threads
-        thread1.start()
-        thread2.start()
+    #Start threads
+    thread1.start()
+    thread2.start()
 
-        #Wait for threads to each finish
-        thread1.join()
-        thread2.join()
+    #Wait for threads to each finish
+    thread1.join()
+    thread2.join()
 
     client1Socket.close()
     client2Socket.close()

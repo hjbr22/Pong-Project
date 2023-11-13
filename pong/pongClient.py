@@ -1,7 +1,7 @@
 # =================================================================================================
 # Contributing Authors:	    Ryan Ennis, Hunter Brogna, Evan Damron
 # Email Addresses:          ryan.ennis@uky.edu, hjbr230@uky.edu, evan.damron@uky.edu
-# Date:                     11/02/2023
+# Date:                     11/12/2023
 # Purpose:                  Started planning out encoding/decoding formatting
 # Misc:                     <Not Required.  Anything else you might want to include>
 # =================================================================================================
@@ -17,7 +17,6 @@ from assets.code.helperCode import *
 # where you should add to the code are marked.  Feel free to change any part of this project
 # to suit your needs.
 def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.socket) -> None:
-    
     # Pygame inits
     pygame.mixer.pre_init(44100, -16, 2, 2048)
     pygame.init()
@@ -91,7 +90,16 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         # sync variable will be used to sync up clients when they... get out of sync
         # i dont know exactly what will be used to hold the balls position info
         # END OF RYANS NOTES
-        
+
+        # Client sends encoded message with game info
+        #sendInfo = playerPaddleObj.moving #+ "/" + str(lScore) + "/" + str(rScore) + "/" + str(sync)
+        #client.send(sendInfo.encode())
+
+        # Client received encoded message from server
+        #opponentPaddleObj.moving = client.recv(1024).decode()
+        #recInfo = client.recv(1024).decode().split("/")
+        #opponentPaddleObj.moving,  = map(str, recInfo)
+
         # =========================================================================================
 
         # Update the player paddle and opponent paddle's location on the screen
@@ -190,12 +198,10 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
         #Get the required information from the server (screen width, height & player paddle, "left" or "right")
         server_data = client.recv(1024).decode().split(",")
         screenWidth, screenHeight, playerPaddle = map(str, server_data)
-
         # If you have messages you'd like to show the user use the errorLabel widget like so
         errorLabel.config(text=f"Connected to the server.\nScreen Width: {screenWidth}, Screen Height: {screenHeight}")
         # You may or may not need to call this, depending on how many times you update the label
         errorLabel.update()     
-
         # Close this window and start the game with the info passed to you from the server
         app.withdraw()     # Hides the window (we'll kill it later)
         playGame(screenWidth, screenHeight, playerPaddle, client)  # User will be either left or right paddle
