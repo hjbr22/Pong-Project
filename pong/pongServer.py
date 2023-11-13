@@ -40,6 +40,7 @@ if __name__ == "__main__":
     server.bind(("localhost", 64920))
     server.listen(2)
     print("test")
+    
     # accept client 1 connection
     client1Socket, client1Address = server.accept()
 
