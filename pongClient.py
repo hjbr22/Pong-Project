@@ -25,10 +25,10 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
     # Constants
     WHITE = (255,255,255)
     clock = pygame.time.Clock()
-    scoreFont = pygame.font.Font("./pong/assets/fonts/pong-score.ttf", 32)
-    winFont = pygame.font.Font("./pong/assets/fonts/visitor.ttf", 48)
-    pointSound = pygame.mixer.Sound("./pong/assets/sounds/point.wav")
-    bounceSound = pygame.mixer.Sound("./pong/assets/sounds/bounce.wav")
+    scoreFont = pygame.font.Font("./assets/fonts/pong-score.ttf", 32)
+    winFont = pygame.font.Font("./assets/fonts/visitor.ttf", 48)
+    pointSound = pygame.mixer.Sound("./assets/sounds/point.wav")
+    bounceSound = pygame.mixer.Sound("./assets/sounds/bounce.wav")
 
     # Display objects
     screen = pygame.display.set_mode((screenWidth, screenHeight))
@@ -220,7 +220,7 @@ def startScreen():
     app = tk.Tk()
     app.title("Server Info")
 
-    image = tk.PhotoImage(file="./pong/assets/images/logo.png")
+    image = tk.PhotoImage(file="./assets/images/logo.png")
 
     titleLabel = tk.Label(image=image)
     titleLabel.grid(column=0, row=0, columnspan=2)
