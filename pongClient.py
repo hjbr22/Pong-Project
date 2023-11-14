@@ -18,18 +18,18 @@ from assets.code.helperCode import *
 # to suit your needs.
 def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.socket) -> None:
     print("playgame!")
-    client.settimeout(1)  # timeout after 1 second, smaller than server timeout
-    startMsg = ""
-    while startMsg != "START":
-        try:
-            sendMsg = "JOIN"
-            client.send(sendMsg.encode())
-            print('sent JOIN')
-            # Attempt to receive a message
-            startMsg = client.recv(1024).decode()
-        except socket.timeout:
-            continue
-    client.settimeout(None)
+    # client.settimeout(1)  # timeout after 1 second, smaller than server timeout
+    # startMsg = ""
+    # while startMsg != "START":
+    #     try:
+    #         sendMsg = "JOIN"
+    #         client.send(sendMsg.encode())
+    #         print('sent JOIN')
+    #         # Attempt to receive a message
+    #         startMsg = client.recv(1024).decode()
+    #     except socket.timeout:
+    #         continue
+    # client.settimeout(None)
 
 
     # Pygame inits
@@ -233,6 +233,20 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
         screenWidth, screenHeight, playerPaddle = map(str, server_data)
         screenWidth = int(screenWidth)
         screenHeight = int(screenHeight)
+
+        client.settimeout(.5)  # timeout after .5 second, smaller than server timeout
+        if playerPaddle == "left":      # client 1 will wait for client 2 to join before starting game
+            startMsg = ""
+            while startMsg != "START":  # client 1 recieves the go-ahead from the server that client 2 is ready
+                try:
+                    client.send("HERE".encode())    # Lets server know that client 1 is still connected
+                    print("client HERE")
+                    startMsg = client.recv(1024).decode()
+                except socket.timeout:
+                    continue
+        client.settimeout(None)
+
+
         # If you have messages you'd like to show the user use the errorLabel widget like so
         # errorLabel.config(text=f"Connected to the server.\nScreen Width: {screenWidth}, Screen Height: {screenHeight}")
         # You may or may not need to call this, depending on how many times you update the label
