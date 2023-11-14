@@ -47,8 +47,11 @@ def f2(client1Socket, client2Socket):
 
 def clientStillHere(client_socket):
     try:
-        client_socket.settimeout(2)
-        message = client_socket.recv(1024).decode()
+        client_socket.settimeout(3)
+        messages = client_socket.recv(1024).decode()
+        message = messages.split("/")[-1]
+        print(f'message: {message}')
+        print(f'messages: {messages}')
         client_socket.settimeout(None)
         if message == "HERE":
             return True
@@ -77,6 +80,7 @@ if __name__ == "__main__":
             if readable:  # If the list is not empty, a client is ready to connect
                 client2_socket, client2_address = server.accept()
                 client2_socket.send("640,480,right".encode())
+                break
         else:
             print("client 1 disconnected... attempting to reconnect")
             client1_socket, client1_address = server.accept()
