@@ -115,21 +115,23 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         # sync variable will be used to sync up clients when they... get out of sync
         # i dont know exactly what will be used to hold the balls position info
         # END OF RYANS NOTES
-
-        # Client sends encoded message with game info
-        sendInfo = playerPaddleObj.moving + "/" + str(lScore) + "/" + str(rScore) + "/" + str(sync) + "/" + \
-                   str(ball.rect.x) + "/" + str(ball.rect.y)
-        client.send(sendInfo.encode())
-        print('SENT GAME DATA')
-        # Client received encoded message from server
-        recInfo = client.recv(1024).decode().split("/")
-        opponentPaddleObj.moving, rec_lScore_str, rec_rScore_str, rec_sync_str, rec_ball_x_str, rec_ball_y_str = map(str, recInfo)
-        rec_lScore, rec_rScore, rec_sync, rec_ball_x, rec_ball_y = int(rec_lScore_str), int(rec_rScore_str), int(rec_sync_str), float(rec_ball_x_str), float(rec_ball_y_str)
-        if rec_sync > sync:
-            ball.rect.x = rec_ball_x
-            ball.rect.y = rec_ball_y
-            lScore = rec_lScore
-            rScore = rec_rScore
+        try:
+            # Client sends encoded message with game info
+            sendInfo = playerPaddleObj.moving + "/" + str(lScore) + "/" + str(rScore) + "/" + str(sync) + "/" + \
+                       str(ball.rect.x) + "/" + str(ball.rect.y)
+            client.send(sendInfo.encode())
+            print('SENT GAME DATA')
+            # Client received encoded message from server
+            recInfo = client.recv(1024).decode().split("/")
+            opponentPaddleObj.moving, rec_lScore_str, rec_rScore_str, rec_sync_str, rec_ball_x_str, rec_ball_y_str = map(str, recInfo)
+            rec_lScore, rec_rScore, rec_sync, rec_ball_x, rec_ball_y = int(rec_lScore_str), int(rec_rScore_str), int(rec_sync_str), float(rec_ball_x_str), float(rec_ball_y_str)
+            if rec_sync > sync:
+                ball.rect.x = rec_ball_x
+                ball.rect.y = rec_ball_y
+                lScore = rec_lScore
+                rScore = rec_rScore
+        except socket.error as e:
+            print(f"socket error occured: {e}")
         # =========================================================================================
 
         # Update the player paddle and opponent paddle's location on the screen

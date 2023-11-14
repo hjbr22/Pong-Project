@@ -93,8 +93,8 @@ if __name__ == "__main__":
     client1_socket.send(start_msg.encode())
     client2_socket.send(start_msg.encode())
 
-    thread1 = threading.Thread(target = f1, args = (client1_socket, client2_socket))
-    thread2 = threading.Thread(target = f1, args = (client2_socket, client1_socket))
+    thread1 = threading.Thread(target = f2, args = (client1_socket, client2_socket))
+    thread2 = threading.Thread(target = f2, args = (client2_socket, client1_socket))
 
     #Start threads
     thread1.start()
