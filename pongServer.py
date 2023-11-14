@@ -32,7 +32,7 @@ if __name__ == "__main__":
 
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)    # Working on localhost
 
-    server.bind(("localhost", 64920))
+    server.bind(("10.47.184.199", 64920))
     server.listen(2)
     print("test")
     
