@@ -17,13 +17,17 @@ from assets.code.helperCode import *
 # where you should add to the code are marked.  Feel free to change any part of this project
 # to suit your needs.
 def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.socket) -> None:
-    print("playgame FUNCTION TEST")
-    
-    startMsg = client.recv(1024).decode()
-    while (startMsg != "START"):
-        sendMsg = "JOIN"
-        client.send(sendMsg.encode())
-        startMsg = client.recv(1024).decode()
+    print("playgame!")
+    client.settimeout(1)  # timeout after 1 second
+    startMsg = ""
+    while startMsg != "START":
+        try:
+            sendMsg = "JOIN"
+            client.send(sendMsg.encode())
+            # Attempt to receive a message
+            startMsg = client.recv(1024).decode()
+        except socket.timeout:
+            continue
 
 
     
