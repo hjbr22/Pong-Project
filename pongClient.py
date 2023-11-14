@@ -37,15 +37,10 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
     # Display objects
     print(pygame)
     screen = pygame.display.set_mode((screenWidth, screenHeight))
-    print("playgame 2.1")
     winMessage = pygame.Rect(0,0,0,0)
-    print("playgame 2.2")
     topWall = pygame.Rect(-10,0,screenWidth+20, 10)
-    print("playgame 2.3")
     bottomWall = pygame.Rect(-10, screenHeight-10, screenWidth+20, 10)
-    print("playgame 2.4")
     centerLine = []
-    print("playgame 2.5")
     for i in range(0, screenHeight, 10):
         centerLine.append(pygame.Rect((screenWidth/2)-5,i,5,5))
 
@@ -108,10 +103,14 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         # i dont know exactly what will be used to hold the balls position info
         # END OF RYANS NOTES
 
+        print("playgame 6")
+
         # Client sends encoded message with game info
         sendInfo = playerPaddleObj.moving + "/" + str(lScore) + "/" + str(rScore) + "/" + str(sync) + "/" + \
                    str(ball.rect.x) + "/" + str(ball.rect.y)
         client.send(sendInfo.encode())
+
+        print("playgame 6")
 
         # Client received encoded message from server
         recInfo = client.recv(1024).decode().split("/")
@@ -123,6 +122,8 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
             lScore = rec_lScore
             rScore = rec_rScore
         # =========================================================================================
+
+        print("playgame 7")
 
         # Update the player paddle and opponent paddle's location on the screen
         for paddle in [playerPaddleObj, opponentPaddleObj]:

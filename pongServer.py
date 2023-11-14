@@ -16,9 +16,6 @@ import threading
 # I suggest you use the sync variable in pongClient.py to determine how out of sync your two
 # clients are and take actions to resync the games
 
-c1Sync = 0
-c2Sync = 0
-
 def f1(client1Socket, client2Socket):
     while True:
         try:
