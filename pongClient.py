@@ -219,6 +219,7 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
         #Get the required information from the server (screen width, height & player paddle, "left" or "right")
         server_data = client.recv(1024).decode().split(",")
         screenWidth, screenHeight, playerPaddle = map(str, server_data)
+        print(f"screenWidth, screenHeight, playerPaddle, {screenWidth}, {screenHeight}, {playerPaddle}")
         # If you have messages you'd like to show the user use the errorLabel widget like so
         errorLabel.config(text=f"Connected to the server.\nScreen Width: {screenWidth}, Screen Height: {screenHeight}")
         # You may or may not need to call this, depending on how many times you update the label
