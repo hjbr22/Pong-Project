@@ -10,7 +10,6 @@ import pygame
 import tkinter as tk
 import sys
 import socket
-import os
 
 from assets.code.helperCode import *
 
@@ -36,7 +35,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
     print("playgame 2")
 
     # Display objects
-    os.environ['SDL_VIDEODRIVER'] = 'dummy'
+    print(pygame)
     screen = pygame.display.set_mode((screenWidth, screenHeight))
     print("playgame 2.1")
     winMessage = pygame.Rect(0,0,0,0)
@@ -274,5 +273,5 @@ if __name__ == "__main__":
     # Uncomment the line below if you want to play the game without a server to see how it should work
     # the startScreen() function should call playGame with the arguments given to it by the server this is
     # here for demo purposes only
-    # playGame(640, 480,"left",socket.socket(socket.AF_INET, socket.SOCK_STREAM))
-    joinServer("10.47.184.199", "64920", tk.Label(text=""), tk.Tk())
+    playGame(640, 480,"left",socket.socket(socket.AF_INET, socket.SOCK_STREAM))
+    # joinServer("10.47.184.199", "64920", tk.Label(text=""), tk.Tk())
