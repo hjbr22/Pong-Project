@@ -70,6 +70,10 @@ if __name__ == "__main__":
         print("CLIENT2 JOINED") # debugging reference
         c2default = "640,480,right"
         client2Socket.send(c2default.encode())
+        startMsg = "start"
+        client1Socket.send(startMsg.encode())
+        client2Socket.send(startMsg.encode())
+
 
     thread1 = threading.Thread(target = f1, args = (client1Socket, client2Socket))
     thread2 = threading.Thread(target = f1, args = (client2Socket, client1Socket))

@@ -18,6 +18,13 @@ from assets.code.helperCode import *
 # to suit your needs.
 def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.socket) -> None:
     print("playgame FUNCTION TEST")
+    
+    startMsg = client.recv(1024).decode()
+    while (startMsg != "start"):
+        startMsg = client.recv(1024).decode()
+
+
+    
     # Pygame inits
     pygame.mixer.pre_init(44100, -16, 2, 2048)
     pygame.init()
@@ -265,7 +272,7 @@ def startScreen():
     errorLabel = tk.Label(text="")
     errorLabel.grid(column=0, row=4, columnspan=2)
 
-    joinButton = tk.Button(text="Join", command6=lambda: joinServer(ipEntry.get(), portEntry.get(), errorLabel, app))
+    joinButton = tk.Button(text="Join", command=lambda: joinServer(ipEntry.get(), portEntry.get(), errorLabel, app))
     joinButton.grid(column=0, row=3, columnspan=2)
 
     app.mainloop()
