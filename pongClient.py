@@ -22,6 +22,8 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
     pygame.mixer.pre_init(44100, -16, 2, 2048)
     pygame.init()
 
+    print("playgame 1")
+
     # Constants
     WHITE = (255,255,255)
     clock = pygame.time.Clock()
@@ -30,14 +32,23 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
     pointSound = pygame.mixer.Sound("./assets/sounds/point.wav")
     bounceSound = pygame.mixer.Sound("./assets/sounds/bounce.wav")
 
+    print("playgame 2")
+
     # Display objects
     screen = pygame.display.set_mode((screenWidth, screenHeight))
+    print("playgame 2.1")
     winMessage = pygame.Rect(0,0,0,0)
+    print("playgame 2.2")
     topWall = pygame.Rect(-10,0,screenWidth+20, 10)
+    print("playgame 2.3")
     bottomWall = pygame.Rect(-10, screenHeight-10, screenWidth+20, 10)
+    print("playgame 2.4")
     centerLine = []
+    print("playgame 2.5")
     for i in range(0, screenHeight, 10):
         centerLine.append(pygame.Rect((screenWidth/2)-5,i,5,5))
+
+    print("playgame 3")
 
     # Paddle properties and init
     paddleHeight = 50
@@ -60,6 +71,8 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
 
     sync = 0
 
+    print("playgame 4")
+
     while True:
         # Wiping the screen
         screen.fill((0,0,0))
@@ -78,6 +91,8 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
 
             elif event.type == pygame.KEYUP:
                 playerPaddleObj.moving = ""
+
+        print("playgame 5")
 
         # =========================================================================================
         # Your code here to send an update to the server on your paddle's information,
@@ -207,7 +222,7 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
         # If you have messages you'd like to show the user use the errorLabel widget like so
         errorLabel.config(text=f"Connected to the server.\nScreen Width: {screenWidth}, Screen Height: {screenHeight}")
         # You may or may not need to call this, depending on how many times you update the label
-        errorLabel.update()     
+        # errorLabel.update()     
         # Close this window and start the game with the info passed to you from the server
         app.withdraw()     # Hides the window (we'll kill it later)
         playGame(screenWidth, screenHeight, playerPaddle, client)  # User will be either left or right paddle
@@ -251,10 +266,10 @@ def startScreen():
     app.mainloop()
 
 if __name__ == "__main__":
-    startScreen()
+    # startScreen()
     
     # Uncomment the line below if you want to play the game without a server to see how it should work
     # the startScreen() function should call playGame with the arguments given to it by the server this is
     # here for demo purposes only
     # playGame(640, 480,"left",socket.socket(socket.AF_INET, socket.SOCK_STREAM))
-    # joinServer("10.47.184.199", "64920", tk.Label(text=""), tk.Tk())
+    joinServer("10.47.184.199", "64920", tk.Label(text=""), tk.Tk())
