@@ -18,7 +18,7 @@ from assets.code.helperCode import *
 # to suit your needs.
 def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.socket) -> None:
     print("playgame!")
-    client.settimeout(5)  # timeout after 1 second
+    client.settimeout(.5)  # timeout after 1 second
     startMsg = ""
     while startMsg != "START":
         try:
@@ -31,7 +31,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
             continue
     client.settimeout(None)
 
-    
+
     # Pygame inits
     pygame.mixer.pre_init(44100, -16, 2, 2048)
     pygame.init()
