@@ -49,7 +49,6 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
     print("playgame 2")
 
     # Display objects
-    print(pygame)
     screen = pygame.display.set_mode((screenWidth, screenHeight))
     winMessage = pygame.Rect(0,0,0,0)
     topWall = pygame.Rect(-10,0,screenWidth+20, 10)
@@ -121,7 +120,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         sendInfo = playerPaddleObj.moving + "/" + str(lScore) + "/" + str(rScore) + "/" + str(sync) + "/" + \
                    str(ball.rect.x) + "/" + str(ball.rect.y)
         client.send(sendInfo.encode())
-
+        print('SENT GAME DATA')
         # Client received encoded message from server
         recInfo = client.recv(1024).decode().split("/")
         opponentPaddleObj.moving, rec_lScore_str, rec_rScore_str, rec_sync_str, rec_ball_x_str, rec_ball_y_str = map(str, recInfo)

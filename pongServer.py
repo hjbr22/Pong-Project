@@ -1,6 +1,6 @@
 # =================================================================================================
-# Contributing Authors:	    Ryan Ennis
-# Email Addresses:          ryan.ennis@uky.edu
+# Contributing Authors:	    Ryan Ennis, Evan Damron
+# Email Addresses:          ryan.ennis@uky.edu, evan.damron@uky.edu
 # Date:                     11/12/2023
 # Purpose:                  Redid while loops
 # Misc:                     <Not Required.  Anything else you might want to include>
@@ -76,16 +76,15 @@ if __name__ == "__main__":
             print("CLIENT2 JOINED")
             client2_socket.send("640,480,right".encode())
 
-            start_msg = "START"
-            client1_socket.send(start_msg.encode())
-            client2_socket.send(start_msg.encode())
+
             ready_to_play = True
 
         except socket.timeout:
             continue
 
-
-
+    start_msg = "START"
+    client1_socket.send(start_msg.encode())
+    client2_socket.send(start_msg.encode())
 
     thread1 = threading.Thread(target = f1, args = (client1_socket, client2_socket))
     thread2 = threading.Thread(target = f1, args = (client2_socket, client1_socket))
@@ -93,11 +92,11 @@ if __name__ == "__main__":
     #Start threads
     thread1.start()
     thread2.start()
-
+    print('made it here1')
     #Wait for threads to each finish
     thread1.join()
     thread2.join()
-
+    print('made it here2')
     client1_socket.close()
     client2_socket.close()
     server.close()
