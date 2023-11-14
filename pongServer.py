@@ -7,6 +7,7 @@
 # =================================================================================================
 
 import socket
+import select
 import threading
 import time
 
@@ -44,10 +45,12 @@ def f2(client1Socket, client2Socket):
         client2Socket.send(msg)
 
 
-def handle_client_connection(client_socket):
+def clientStillHere(client_socket):
     try:
-        join_message = client_socket.recv(1024).decode()
-        if join_message == "JOIN":
+        client_socket.settimeout(2)
+        message = client_socket.recv(1024).decode()
+        client_socket.settimeout(None)
+        if message == "HERE":
             return True
         else:
             client_socket.close()
@@ -64,30 +67,46 @@ if __name__ == "__main__":
     server.listen(2)
     print("waiting for client 1...")
     client1_socket, client1_address = server.accept()
-    server.settimeout(3)
-    ready_to_play = False
-    while not ready_to_play:
-        try:
-            if not handle_client_connection(client1_socket):
-                print('waiting for client 1...')
-                client1_socket, client1_address = server.accept()
-                continue
-
+    client1_socket.send("640,480,left".encode())
+    print('Client 1 connected, waiting for client 2...')
+    while True:
+        # check if client 1 is still connected
+        if clientStillHere(client1_socket):
+            # Use select to wait for 3 seconds for a client to connect
+            readable, _, _ = select.select([server], [], [], 3)
+            if readable:  # If the list is not empty, a client is ready to connect
+                client2_socket, client2_address = server.accept()
+                client2_socket.send("640,480,right".encode())
+        else:
+            print("client 1 disconnected... attempting to reconnect")
+            client1_socket, client1_address = server.accept()
             client1_socket.send("640,480,left".encode())
 
-            print("waiting for client 2...")
-            client2_socket, client2_address = server.accept()
-            if not handle_client_connection(client2_socket):
-                continue
 
-            print("CLIENT2 JOINED")
-            client2_socket.send("640,480,right".encode())
-            ready_to_play = True
+    # ready_to_play = False
+    # while not ready_to_play:
+    #     try:
+    #         if not handle_client_connection(client1_socket):
+    #             print('waiting for client 1...')
+    #             client1_socket, client1_address = server.accept()
+    #             continue
+    #
+    #         client1_socket.send("640,480,left".encode())
+    #
+    #         print("waiting for client 2...")
+    #         client2_socket, client2_address = server.accept()
+    #         if not handle_client_connection(client2_socket):
+    #             continue
+    #
+    #         print("CLIENT2 JOINED")
+    #         client2_socket.send("640,480,right".encode())
+    #         ready_to_play = True
+    #
+    #     except socket.timeout:
+    #         continue
+    # if not handle_client_connection(client2_socket):
+    #     print('DIDNT GET SECOND JOIN FROM CLIENT 2')
 
-        except socket.timeout:
-            continue
-    if not handle_client_connection(client2_socket):
-        print('DIDNT GET SECOND JOIN FROM CLIENT 2')
     server.settimeout(None)
     start_msg = "START"
     client1_socket.send(start_msg.encode())
