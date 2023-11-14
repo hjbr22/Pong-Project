@@ -18,7 +18,7 @@ from assets.code.helperCode import *
 # to suit your needs.
 def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.socket) -> None:
     print("playgame!")
-    client.settimeout(.5)  # timeout after 1 second
+    client.settimeout(1)  # timeout after 1 second, smaller than server timeout
     startMsg = ""
     while startMsg != "START":
         try:

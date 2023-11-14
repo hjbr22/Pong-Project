@@ -82,13 +82,12 @@ if __name__ == "__main__":
 
             print("CLIENT2 JOINED")
             client2_socket.send("640,480,right".encode())
-
-
             ready_to_play = True
 
         except socket.timeout:
             continue
-
+    if not handle_client_connection(client2_socket):
+        print('DIDNT GET SECOND JOIN FROM CLIENT 2')
     server.settimeout(None)
     start_msg = "START"
     client1_socket.send(start_msg.encode())
