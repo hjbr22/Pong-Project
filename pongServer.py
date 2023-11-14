@@ -37,6 +37,17 @@ def f1(client1Socket, client2Socket):
             print(f"An unexpected error occurred: {e}")
             break  # Exit the loop in case of any other exception
 
+def handle_client_connection(client_socket):
+    try:
+        join_message = client_socket.recv(1024).decode()
+        if join_message == "JOIN":
+            return True
+        else:
+            client_socket.close()
+            return False
+    except socket.error:
+        client_socket.close()
+        return False
 
 if __name__ == "__main__":
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # DGRAM)      # Creating the server
@@ -44,40 +55,40 @@ if __name__ == "__main__":
 
     server.bind(("10.47.184.199", 64920))
     server.listen(2)
-    server.settimeout(2)
-    while True:
-        print("waiting for client 1...")
+    print("waiting for client 1...")
+    client1_socket, client1_address = server.accept()
+    server.settimeout(3)
+    ready_to_play = False
+    while not ready_to_play:
         try:
-            # accept client 1 connection
-            client1Socket, client1Address = server.accept()
-            # Assign playside and default settings to client1
-            c1joinMessage = client1Socket.recv(1024).decode()
-            if c1joinMessage == "JOIN":
-                print("CLIENT1 JOINED") # debugging reference
-                c1default = "640,480,left"
-                client1Socket.send(c1default.encode())
-            else:
-                client1Socket.close()
-                print('Client1 not connected')
+            if not handle_client_connection(client1_socket):
+                print('waiting for client 1...')
+                client1_socket, client1_address = server.accept()
                 continue
 
-            # accept client 2 connection
-            client2Socket, client2Address = server.accept()
-            client2Socket.settimeout(1)
-            c2joinMessage = client2Socket.recv(1024).decode()
-            if c2joinMessage == "JOIN":
-                print("CLIENT2 JOINED")  # debugging reference
-                c2default = "640,480,right"
-                client2Socket.send(c2default.encode())
-                startMsg = "START"
-                client1Socket.send(startMsg.encode())
-                client2Socket.send(startMsg.encode())
-                break
-        except:
+            client1_socket.send("640,480,left".encode())
+
+            print("waiting for client 2...")
+            client2_socket, client2_address = server.accept()
+            if not handle_client_connection(client2_socket):
+                continue
+
+            print("CLIENT2 JOINED")
+            client2_socket.send("640,480,right".encode())
+
+            start_msg = "START"
+            client1_socket.send(start_msg.encode())
+            client2_socket.send(start_msg.encode())
+            ready_to_play = True
+
+        except socket.timeout:
             continue
 
-    thread1 = threading.Thread(target = f1, args = (client1Socket, client2Socket))
-    thread2 = threading.Thread(target = f1, args = (client2Socket, client1Socket))
+
+
+
+    thread1 = threading.Thread(target = f1, args = (client1_socket, client2_socket))
+    thread2 = threading.Thread(target = f1, args = (client2_socket, client1_socket))
 
     #Start threads
     thread1.start()
@@ -87,6 +98,6 @@ if __name__ == "__main__":
     thread1.join()
     thread2.join()
 
-    client1Socket.close()
-    client2Socket.close()
+    client1_socket.close()
+    client2_socket.close()
     server.close()

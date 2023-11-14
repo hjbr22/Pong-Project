@@ -18,12 +18,13 @@ from assets.code.helperCode import *
 # to suit your needs.
 def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.socket) -> None:
     print("playgame!")
-    client.settimeout(1)  # timeout after 1 second
+    client.settimeout(5)  # timeout after 1 second
     startMsg = ""
     while startMsg != "START":
         try:
             sendMsg = "JOIN"
             client.send(sendMsg.encode())
+            print('sent JOIN')
             # Attempt to receive a message
             startMsg = client.recv(1024).decode()
         except socket.timeout:
@@ -225,18 +226,17 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
         # Inform the server that a new client is connecting
         client.send("JOIN".encode())
         print("CLIENT JOIN")    # debugging reference
-        #Get the required information from the server (screen width, height & player paddle, "left" or "right")
         server_data = client.recv(1024).decode().split(",")
+        print('made it here', server_data)
         screenWidth, screenHeight, playerPaddle = map(str, server_data)
         screenWidth = int(screenWidth)
         screenHeight = int(screenHeight)
         # If you have messages you'd like to show the user use the errorLabel widget like so
-        errorLabel.config(text=f"Connected to the server.\nScreen Width: {screenWidth}, Screen Height: {screenHeight}")
+        # errorLabel.config(text=f"Connected to the server.\nScreen Width: {screenWidth}, Screen Height: {screenHeight}")
         # You may or may not need to call this, depending on how many times you update the label
         # errorLabel.update()     
         # Close this window and start the game with the info passed to you from the server
         # app.withdraw()     # Hides the window (we'll kill it later)
-
         playGame(screenWidth, screenHeight, playerPaddle, client)  # User will be either left or right paddle
         app.quit()         # Kills the window
     except ConnectionRefusedError:
@@ -278,10 +278,10 @@ def startScreen():
     app.mainloop()
 
 if __name__ == "__main__":
-    startScreen()
+    # startScreen()
     
     # Uncomment the line below if you want to play the game without a server to see how it should work
     # the startScreen() function should call playGame with the arguments given to it by the server this is
     # here for demo purposes only
     # playGame(640, 480,"left",socket.socket(socket.AF_INET, socket.SOCK_STREAM))
-    # joinServer("10.47.184.199", "64920", tk.Label(text=""), tk.Tk())
+    joinServer("10.47.184.199", "64920", tk.Label(text=""), tk.Tk())
