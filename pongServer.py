@@ -21,9 +21,23 @@ c2Sync = 0
 
 def f1(client1Socket, client2Socket):
     while True:
-        print("f1 FUNCTION TEST")   # debugging reference
-        msg = client1Socket.recv(1024) # receive info from client1
-        client2Socket.send(msg)         # send client1 info to client2
+        try:
+            print("f1 FUNCTION TEST")  # debugging reference
+            msg = client1Socket.recv(1024)  # receive info from client1
+
+            if not msg:
+                print("No message received, client1 may have disconnected.")
+                break  # Exit the loop if no message is received
+
+            client2Socket.send(msg)
+
+        except socket.error as e:
+            print(f"Socket error occurred: {e}")
+            break  # Exit the loop in case of socket error
+
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+            break  # Exit the loop in case of any other exception
 
 
 if __name__ == "__main__":
