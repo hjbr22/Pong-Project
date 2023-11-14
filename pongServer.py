@@ -37,6 +37,13 @@ def f1(client1Socket, client2Socket):
             print(f"An unexpected error occurred: {e}")
             break  # Exit the loop in case of any other exception
 
+def f2(client1Socket, client2Socket):
+    while True:
+        print("f2 FUNCTION TEST")  # debugging reference
+        msg = client1Socket.recv(1024)  # receive info from client1
+        client2Socket.send(msg)
+
+
 def handle_client_connection(client_socket):
     try:
         join_message = client_socket.recv(1024).decode()
