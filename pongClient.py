@@ -110,14 +110,10 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         # i dont know exactly what will be used to hold the balls position info
         # END OF RYANS NOTES
 
-        print("playgame 6")
-
         # Client sends encoded message with game info
         sendInfo = playerPaddleObj.moving + "/" + str(lScore) + "/" + str(rScore) + "/" + str(sync) + "/" + \
                    str(ball.rect.x) + "/" + str(ball.rect.y)
         client.send(sendInfo.encode())
-
-        print("playgame 6")
 
         # Client received encoded message from server
         recInfo = client.recv(1024).decode().split("/")
@@ -129,8 +125,6 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
             lScore = rec_lScore
             rScore = rec_rScore
         # =========================================================================================
-
-        print("playgame 7")
 
         # Update the player paddle and opponent paddle's location on the screen
         for paddle in [playerPaddleObj, opponentPaddleObj]:
@@ -278,10 +272,10 @@ def startScreen():
     app.mainloop()
 
 if __name__ == "__main__":
-    # startScreen()
+    startScreen()
     
     # Uncomment the line below if you want to play the game without a server to see how it should work
     # the startScreen() function should call playGame with the arguments given to it by the server this is
     # here for demo purposes only
     # playGame(640, 480,"left",socket.socket(socket.AF_INET, socket.SOCK_STREAM))
-    joinServer("10.47.184.199", "64920", tk.Label(text=""), tk.Tk())
+    # joinServer("10.47.184.199", "64920", tk.Label(text=""), tk.Tk())
