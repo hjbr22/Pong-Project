@@ -220,6 +220,8 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
         #Get the required information from the server (screen width, height & player paddle, "left" or "right")
         server_data = client.recv(1024).decode().split(",")
         screenWidth, screenHeight, playerPaddle = map(str, server_data)
+        screenWidth = int(screenWidth)
+        screenHeight = int(screenHeight)
         # If you have messages you'd like to show the user use the errorLabel widget like so
         errorLabel.config(text=f"Connected to the server.\nScreen Width: {screenWidth}, Screen Height: {screenHeight}")
         # You may or may not need to call this, depending on how many times you update the label
@@ -273,5 +275,5 @@ if __name__ == "__main__":
     # Uncomment the line below if you want to play the game without a server to see how it should work
     # the startScreen() function should call playGame with the arguments given to it by the server this is
     # here for demo purposes only
-    playGame(640, 480,"left",socket.socket(socket.AF_INET, socket.SOCK_STREAM))
-    # joinServer("10.47.184.199", "64920", tk.Label(text=""), tk.Tk())
+    # playGame(640, 480,"left",socket.socket(socket.AF_INET, socket.SOCK_STREAM))
+    joinServer("10.47.184.199", "64920", tk.Label(text=""), tk.Tk())
