@@ -93,14 +93,19 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         # END OF RYANS NOTES
 
         # Client sends encoded message with game info
-        sendInfo = playerPaddleObj.moving + "/" + str(lScore) + "/" + str(rScore) + "/" + str(sync)
+        sendInfo = playerPaddleObj.moving + "/" + str(lScore) + "/" + str(rScore) + "/" + str(sync) + "/" + \
+                   str(ball.rect.x) + "/" + str(ball.rect.y)
         client.send(sendInfo.encode())
 
         # Client received encoded message from server
-        #opponentPaddleObj.moving = client.recv(1024).decode()
-        #recInfo = client.recv(1024).decode().split("/")
-        #opponentPaddleObj.moving,  = map(str, recInfo)
-
+        recInfo = client.recv(1024).decode().split("/")
+        opponentPaddleObj.moving, rec_lScore_str, rec_rScore_str, rec_sync_str, rec_ball_x_str, rec_ball_y_str = map(str, recInfo)
+        rec_lScore, rec_rScore, rec_sync, rec_ball_x, rec_ball_y = int(rec_lScore_str), int(rec_rScore_str), int(rec_sync_str), float(rec_ball_x_str), float(rec_ball_y_str)
+        if rec_sync > sync:
+            ball.rect.x = rec_ball_x
+            ball.rect.y = rec_ball_y
+            lScore = rec_lScore
+            rScore = rec_rScore
         # =========================================================================================
 
         # Update the player paddle and opponent paddle's location on the screen
@@ -240,16 +245,16 @@ def startScreen():
     errorLabel = tk.Label(text="")
     errorLabel.grid(column=0, row=4, columnspan=2)
 
-    joinButton = tk.Button(text="Join", command=lambda: joinServer(ipEntry.get(), portEntry.get(), errorLabel, app))
+    joinButton = tk.Button(text="Join", command6=lambda: joinServer(ipEntry.get(), portEntry.get(), errorLabel, app))
     joinButton.grid(column=0, row=3, columnspan=2)
 
     app.mainloop()
 
 if __name__ == "__main__":
-    #startScreen()
+    startScreen()
     
     # Uncomment the line below if you want to play the game without a server to see how it should work
     # the startScreen() function should call playGame with the arguments given to it by the server this is
     # here for demo purposes only
     # playGame(640, 480,"left",socket.socket(socket.AF_INET, socket.SOCK_STREAM))
-    joinServer("10.47.184.199", "64920", tk.Label(text=""), tk.Tk())
+    # joinServer("10.47.184.199", "64920", tk.Label(text=""), tk.Tk())
