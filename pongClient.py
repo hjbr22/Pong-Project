@@ -89,6 +89,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         # Getting keypress events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                print('MADE IT TO PYGAME QUIT')
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
