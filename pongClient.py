@@ -20,7 +20,9 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
     print("playgame FUNCTION TEST")
     
     startMsg = client.recv(1024).decode()
-    while (startMsg != "start"):
+    while (startMsg != "START"):
+        sendMsg = "JOIN"
+        client.send(sendMsg.encode())
         startMsg = client.recv(1024).decode()
 
 

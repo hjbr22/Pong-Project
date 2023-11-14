@@ -8,6 +8,7 @@
 
 import socket
 import threading
+import time
 
 # Use this file to write your server logic
 # You will need to support at least two clients
@@ -38,41 +39,47 @@ def f1(client1Socket, client2Socket):
 
 
 if __name__ == "__main__":
+    readyToPlay = False
+    while not readyToPlay:
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)#DGRAM)      # Creating the server
 
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)#DGRAM)      # Creating the server
+        server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)    # Working on localhost
 
-    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)    # Working on localhost
+        server.bind(("10.47.184.199", 64920))
+        server.listen(2)
+        print("test")
 
-    server.bind(("10.47.184.199", 64920))
-    server.listen(2)
-    print("test")
-    
-    # accept client 1 connection
-    client1Socket, client1Address = server.accept()
+        # accept client 1 connection
+        client1Socket, client1Address = server.accept()
 
-    # Assign playside and default settings to client1
-    c1join = ""
-    c1join = client1Socket.recv(1024).decode()
+        # Assign playside and default settings to client1
+        c1join = None
+        c1join = client1Socket.recv(1024).decode()
 
-    if c1join == "JOIN":
-        print("CLIENT1 JOINED") # debugging reference
-        c1default = "640,480,left"
-        client1Socket.send(c1default.encode())
+        if c1join == "JOIN":
+            print("CLIENT1 JOINED") # debugging reference
+            c1default = "640,480,left"
+            client1Socket.send(c1default.encode())
+        else:
+            print('Client1 DISCONNECTED')
 
-    # accept client 2 connection
-    client2Socket, client2Address = server.accept() 
-    
-    # Assign playside and default settings to client2
-    c2join = ""
-    c2join = client2Socket.recv(1024).decode()
+        # accept client 2 connection
+        client2Socket, client2Address = server.accept()
 
-    if c2join == "JOIN":
-        print("CLIENT2 JOINED") # debugging reference
-        c2default = "640,480,right"
-        client2Socket.send(c2default.encode())
-        startMsg = "start"
-        client1Socket.send(startMsg.encode())
-        client2Socket.send(startMsg.encode())
+        # Assign playside and default settings to client2
+        c2join = None
+        c2join = client2Socket.recv(1024).decode()
+
+        if c2join == "JOIN":
+            print("CLIENT2 JOINED") # debugging reference
+            c2default = "640,480,right"
+            client2Socket.send(c2default.encode())
+            startMsg = "START"
+            client1Socket.send(startMsg.encode())
+            client2Socket.send(startMsg.encode())
+        else:
+            print('Client2 Disconnected')
+
 
 
     thread1 = threading.Thread(target = f1, args = (client1Socket, client2Socket))
