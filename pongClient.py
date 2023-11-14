@@ -226,20 +226,20 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)#DGRAM)
         client.connect((ip, int(port)))
         # Inform the server that a new client is connecting
-        client.send("JOIN".encode())
-        print("CLIENT JOIN")    # debugging reference
+        # client.send("JOIN".encode())
+        # print("CLIENT JOIN")    # debugging reference
         server_data = client.recv(1024).decode().split(",")
         print('made it here', server_data)
         screenWidth, screenHeight, playerPaddle = map(str, server_data)
         screenWidth = int(screenWidth)
         screenHeight = int(screenHeight)
-
+        print(server_data)
         client.settimeout(.5)  # timeout after .5 second, smaller than server timeout
         if playerPaddle == "left":      # client 1 will wait for client 2 to join before starting game
             startMsg = ""
             while startMsg != "START":  # client 1 recieves the go-ahead from the server that client 2 is ready
                 try:
-                    client.send("HERE".encode())    # Lets server know that client 1 is still connected
+                    client.send("/HERE".encode())    # Lets server know that client 1 is still connected
                     print("client HERE")
                     startMsg = client.recv(1024).decode()
                 except socket.timeout:
