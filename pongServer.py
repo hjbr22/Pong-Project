@@ -89,6 +89,7 @@ if __name__ == "__main__":
         except socket.timeout:
             continue
 
+    server.settimeout(None)
     start_msg = "START"
     client1_socket.send(start_msg.encode())
     client2_socket.send(start_msg.encode())

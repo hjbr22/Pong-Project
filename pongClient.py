@@ -29,7 +29,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
             startMsg = client.recv(1024).decode()
         except socket.timeout:
             continue
-
+    client.settimeout(None)
 
     
     # Pygame inits
