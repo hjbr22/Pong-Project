@@ -10,6 +10,7 @@ import pygame
 import tkinter as tk
 import sys
 import socket
+import os
 
 from assets.code.helperCode import *
 
@@ -35,6 +36,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
     print("playgame 2")
 
     # Display objects
+    os.environ['SDL_VIDEODRIVER'] = 'dummy'
     screen = pygame.display.set_mode((screenWidth, screenHeight))
     print("playgame 2.1")
     winMessage = pygame.Rect(0,0,0,0)
@@ -219,13 +221,13 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
         #Get the required information from the server (screen width, height & player paddle, "left" or "right")
         server_data = client.recv(1024).decode().split(",")
         screenWidth, screenHeight, playerPaddle = map(str, server_data)
-        print(f"screenWidth, screenHeight, playerPaddle, {screenWidth}, {screenHeight}, {playerPaddle}")
         # If you have messages you'd like to show the user use the errorLabel widget like so
         errorLabel.config(text=f"Connected to the server.\nScreen Width: {screenWidth}, Screen Height: {screenHeight}")
         # You may or may not need to call this, depending on how many times you update the label
         # errorLabel.update()     
         # Close this window and start the game with the info passed to you from the server
-        app.withdraw()     # Hides the window (we'll kill it later)
+        # app.withdraw()     # Hides the window (we'll kill it later)
+
         playGame(screenWidth, screenHeight, playerPaddle, client)  # User will be either left or right paddle
         app.quit()         # Kills the window
     except ConnectionRefusedError:
