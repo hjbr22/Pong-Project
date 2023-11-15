@@ -115,18 +115,20 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
             recInfo = client.recv(1024).decode().split("/")
             opponentPaddleObj.moving, rec_lScore_str, rec_rScore_str, rec_sync_str, rec_ball_x_str, rec_ball_y_str = map(str, recInfo)
             rec_lScore, rec_rScore, rec_sync, rec_ball_x, rec_ball_y = int(rec_lScore_str), int(rec_rScore_str), int(rec_sync_str), float(rec_ball_x_str), float(rec_ball_y_str)
+            disconnect = False
             if rec_sync > sync:
                 ball.rect.x = rec_ball_x
                 ball.rect.y = rec_ball_y
                 lScore = rec_lScore
                 rScore = rec_rScore
             elif rec_sync == -1:
+                print(recInfo)
+                disconnect = True
                 discText = "Opponent Rage Quit/Disconnected!"
                 textSurface = winFont.render(discText, False, WHITE, (0, 0, 0))
                 textRect = textSurface.get_rect()
                 textRect.center = ((screenWidth / 2), screenHeight / 4)
                 discMessage = screen.blit(textSurface, textRect)
-                client.close()
         except socket.error as e:
             print(f"socket error occured: {e}")
         # =========================================================================================
@@ -146,7 +148,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
             textRect = textSurface.get_rect()
             textRect.center = ((screenWidth/2), screenHeight/2)
             winMessage = screen.blit(textSurface, textRect)
-        else:
+        elif not disconnect:
             # ==== Ball Logic =====================================================================
             ball.updatePos()
 

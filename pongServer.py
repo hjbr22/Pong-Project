@@ -54,8 +54,6 @@ def clientStillHere(client_socket):
         client_socket.settimeout(.5)
         messages = client_socket.recv(1024).decode()
         message = messages.split("/")[-1]
-        print(f'message: {message}')
-        print(f'messages: {messages}')
         client_socket.settimeout(None)
         if message == "HERE":
             return True
