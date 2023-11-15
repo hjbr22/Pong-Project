@@ -42,9 +42,11 @@ def f1(receivingSocket, sendingSocket):
             print(f"Socket error occurred: {e}")
             sendInfo = "0/0/0/-1/0/0"
             sendingSocket.send(sendInfo.encode())
-
+            break
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
+            sendInfo = "0/0/0/-1/0/0"
+            sendingSocket.send(sendInfo.encode())
             break  # Exit the loop in case of any other exception
 
 
@@ -128,6 +130,7 @@ if __name__ == "__main__":
     thread1.join()
     thread2.join()
     print('threads have finished')
+    time.sleep(5)
     client1_socket.close()
     client2_socket.close()
     server.close()
