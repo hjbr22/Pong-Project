@@ -124,6 +124,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
             print(f'SENT GAME DATA: {sendInfo}')
             # Client received encoded message from server
             recInfo = client.recv(1024).decode().split("/")
+            print(f'REC GAME DATA: {recInfo}')
             opponentPaddleObj.moving, rec_lScore_str, rec_rScore_str, rec_sync_str, rec_ball_x_str, rec_ball_y_str = map(str, recInfo)
             rec_lScore, rec_rScore, rec_sync, rec_ball_x, rec_ball_y = int(rec_lScore_str), int(rec_rScore_str), int(rec_sync_str), float(rec_ball_x_str), float(rec_ball_y_str)
             if rec_sync > sync:
@@ -229,10 +230,12 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
         # client.send("JOIN".encode())
         # print("CLIENT JOIN")    # debugging reference
         server_data = client.recv(1024).decode().split(",")
+        print('made it here', server_data)
         screenWidth, screenHeight, playerPaddle = map(str, server_data)
         screenWidth = int(screenWidth)
         screenHeight = int(screenHeight)
         print(server_data)
+
         client.settimeout(.5)  # timeout after .5 second, smaller than server timeout
         if playerPaddle == "left":      # client 1 will wait for client 2 to join before starting game
             startMsg = ""
