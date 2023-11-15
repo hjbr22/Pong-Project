@@ -242,8 +242,9 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
             while startMsg != "START":  # client 1 recieves the go-ahead from the server that client 2 is ready
                 try:
                     client.send("/HERE".encode())    # Lets server know that client 1 is still connected
-                    print("client HERE")
+                    print("client 1 HERE")
                     startMsg = client.recv(1024).decode()
+                    print(f'startMsg: {startMsg}')
                 except socket.timeout:
                     continue
         client.settimeout(None)
