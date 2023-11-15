@@ -35,7 +35,7 @@ def f1(client1Socket, client2Socket):
         try:
             msg = client1Socket.recv(1024)  # receive info from client1
             if not msg:
-                print("No message received, client1 may have disconnected.")
+                print("No message received, client may have disconnected.")
                 break  # Exit the loop if no message is received
             client2Socket.send(msg)
         except socket.error as e:
@@ -49,7 +49,7 @@ def f1(client1Socket, client2Socket):
 
 def clientStillHere(client_socket):
     try:
-        client_socket.settimeout(3)
+        client_socket.settimeout(.5)
         messages = client_socket.recv(1024).decode()
         message = messages.split("/")[-1]
         print(f'message: {message}')
@@ -78,7 +78,7 @@ if __name__ == "__main__":
         # check if client 1 is still connected
         if clientStillHere(client1_socket):
             # Use select to wait for 3 seconds for a client to connect
-            readable, _, _ = select.select([server], [], [], 3)
+            readable, _, _ = select.select([server], [], [], 0)   # WAS 3
             if readable:  # If the list is not empty, a client is ready to connect
                 client2_socket, client2_address = server.accept()
                 client2_socket.send("640,480,right".encode())

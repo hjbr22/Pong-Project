@@ -221,7 +221,7 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
         screenHeight = int(screenHeight)
         print(server_data)
 
-        client.settimeout(.5)  # timeout after .5 second, smaller than server timeout
+        client.settimeout(.1)  # timeout after .5 second, smaller than server timeout
         if playerPaddle == "left":      # client 1 will wait for client 2 to join before starting game
             startMsg = ""
             while startMsg != "START":  # client 1 recieves the go-ahead from the server that client 2 is ready
@@ -232,7 +232,6 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
                 except socket.timeout:
                     continue
         client.settimeout(None)
-
 
         # If you have messages you'd like to show the user use the errorLabel widget like so
         # errorLabel.config(text=f"Connected to the server.\nScreen Width: {screenWidth}, Screen Height: {screenHeight}")
