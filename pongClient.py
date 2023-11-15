@@ -36,8 +36,6 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
     pygame.mixer.pre_init(44100, -16, 2, 2048)
     pygame.init()
 
-    print("playgame 1")
-
     # Constants
     WHITE = (255,255,255)
     clock = pygame.time.Clock()
@@ -45,8 +43,6 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
     winFont = pygame.font.Font("./assets/fonts/visitor.ttf", 48)
     pointSound = pygame.mixer.Sound("./assets/sounds/point.wav")
     bounceSound = pygame.mixer.Sound("./assets/sounds/bounce.wav")
-
-    print("playgame 2")
 
     # Display objects
     screen = pygame.display.set_mode((screenWidth, screenHeight))
@@ -56,8 +52,6 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
     centerLine = []
     for i in range(0, screenHeight, 10):
         centerLine.append(pygame.Rect((screenWidth/2)-5,i,5,5))
-
-    print("playgame 3")
 
     # Paddle properties and init
     paddleHeight = 50
@@ -80,8 +74,6 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
 
     sync = 0
 
-    print("playgame 4")
-
     while True:
         # Wiping the screen
         screen.fill((0,0,0))
@@ -101,8 +93,6 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
 
             elif event.type == pygame.KEYUP:
                 playerPaddleObj.moving = ""
-
-        print("playgame 5")
 
         # =========================================================================================
         # Your code here to send an update to the server on your paddle's information,
@@ -144,7 +134,6 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
             elif paddle.moving == "up":
                 if paddle.rect.topleft[1] > 10:
                     paddle.rect.y -= paddle.speed
-        print('playgame 6')
         # If the game is over, display the win message
         if lScore > 4 or rScore > 4:
             winText = "Player 1 Wins! " if lScore > 4 else "Player 2 Wins! "
@@ -153,7 +142,6 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
             textRect.center = ((screenWidth/2), screenHeight/2)
             winMessage = screen.blit(textSurface, textRect)
         else:
-            print('playgame 7')
             # ==== Ball Logic =====================================================================
             ball.updatePos()
 
@@ -166,7 +154,6 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
                 rScore += 1
                 pointSound.play()
                 ball.reset(nowGoing="right")
-            print('playgame 8')
             # If the ball hits a paddle
             if ball.rect.colliderect(playerPaddleObj.rect):
                 bounceSound.play()
@@ -190,13 +177,11 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         # Drawing the player's new location
         for paddle in [playerPaddleObj, opponentPaddleObj]:
             pygame.draw.rect(screen, WHITE, paddle)
-        print('playgame 9')
         pygame.draw.rect(screen, WHITE, topWall)
         pygame.draw.rect(screen, WHITE, bottomWall)
         scoreRect = updateScore(lScore, rScore, screen, WHITE, scoreFont)
         pygame.display.update()
         clock.tick(60)
-        print('playgame 10')
         # This number should be synchronized between you and your opponent.  If your number is larger
         # then you are ahead of them in time, if theirs is larger, they are ahead of you, and you need to
         # catch up (use their info)
@@ -242,9 +227,8 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
             while startMsg != "START":  # client 1 recieves the go-ahead from the server that client 2 is ready
                 try:
                     client.send("/HERE".encode())    # Lets server know that client 1 is still connected
-                    print("client 1 HERE")
                     startMsg = client.recv(1024).decode()
-                    print(f'startMsg: {startMsg}')
+                    print(f'received startMsg: {startMsg}')
                 except socket.timeout:
                     continue
         client.settimeout(None)

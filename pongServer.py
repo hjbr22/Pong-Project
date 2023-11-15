@@ -17,19 +17,27 @@ import time
 # for each player and where the ball is, and relay that to each client
 # I suggest you use the sync variable in pongClient.py to determine how out of sync your two
 # clients are and take actions to resync the games
+def flushSocket(socket):
+    socket.setblocking(0)  # Set socket to non-blocking mode
+    try:
+        while True:  # Attempt to read continuously until no more data
+            data = socket.recv(1024)  # Adjust buffer size as needed
+            if not data:
+                break  # If no data is received, exit the loop
+    except BlockingIOError:
+        pass  # There's no more data to read
+    socket.setblocking(1)  #set socket back to blocking mode
 
 def f1(client1Socket, client2Socket):
+    print("The game is running")
+    flushSocket(client1Socket)
     while True:
         try:
-            print("f1 FUNCTION TEST")  # debugging reference
             msg = client1Socket.recv(1024)  # receive info from client1
-            print(f"received {msg.decode()}")
             if not msg:
                 print("No message received, client1 may have disconnected.")
                 break  # Exit the loop if no message is received
-
             client2Socket.send(msg)
-
         except socket.error as e:
             print(f"Socket error occurred: {e}")
             break  # Exit the loop in case of socket error
@@ -37,12 +45,6 @@ def f1(client1Socket, client2Socket):
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
             break  # Exit the loop in case of any other exception
-
-def f2(client1Socket, client2Socket):
-    while True:
-        print("f2 FUNCTION TEST")  # debugging reference
-        msg = client1Socket.recv(1024)  # receive info from client1
-        client2Socket.send(msg)
 
 
 def clientStillHere(client_socket):
@@ -114,7 +116,7 @@ if __name__ == "__main__":
     server.settimeout(None)
     start_msg = "START"
     client1_socket.send(start_msg.encode())
-    client2_socket.send(start_msg.encode())
+    # client2_socket.send(start_msg.encode())
 
     thread1 = threading.Thread(target = f1, args = (client1_socket, client2_socket))
     thread2 = threading.Thread(target = f1, args = (client2_socket, client1_socket))
@@ -122,11 +124,10 @@ if __name__ == "__main__":
     #Start threads
     thread1.start()
     thread2.start()
-    print('made it here1')
     #Wait for threads to each finish
     thread1.join()
     thread2.join()
-    print('made it here2')
+    print('threads have finished')
     client1_socket.close()
     client2_socket.close()
     server.close()
