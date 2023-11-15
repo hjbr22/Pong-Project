@@ -10,7 +10,7 @@ import pygame
 import tkinter as tk
 import sys
 import socket
-
+import time
 from assets.code.helperCode import *
 
 # This is the main game loop.  For the most part, you will not need to modify this.  The sections
@@ -124,11 +124,18 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
             elif rec_sync == -1:
                 print(recInfo)
                 disconnect = True
-                discText = "Opponent Rage Quit/Disconnected!"
+                discText = "Opponent Disconnected!"
                 textSurface = winFont.render(discText, False, WHITE, (0, 0, 0))
                 textRect = textSurface.get_rect()
                 textRect.center = ((screenWidth / 2), screenHeight / 4)
                 discMessage = screen.blit(textSurface, textRect)
+                discText = "closing game"
+                textSurface = winFont.render(discText, False, WHITE, (0, 0, 0))
+                textRect = textSurface.get_rect()
+                textRect.center = ((screenWidth / 2), screenHeight / 3)
+                discMessage = screen.blit(textSurface, textRect)
+                time.sleep(3)
+                client.close()
         except socket.error as e:
             print(f"socket error occured: {e}")
         # =========================================================================================
@@ -148,7 +155,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
             textRect = textSurface.get_rect()
             textRect.center = ((screenWidth/2), screenHeight/2)
             winMessage = screen.blit(textSurface, textRect)
-        elif not disconnect:
+        else:
             # ==== Ball Logic =====================================================================
             ball.updatePos()
 

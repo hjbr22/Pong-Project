@@ -42,7 +42,6 @@ def f1(receivingSocket, sendingSocket):
             print(f"Socket error occurred: {e}")
             sendInfo = "0/0/0/-1/0/0"
             sendingSocket.send(sendInfo.encode())
-            break  # Exit the loop in case of socket error
 
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
@@ -87,6 +86,7 @@ if __name__ == "__main__":
             print("client 1 disconnected... attempting to reconnect")
             client1_socket, client1_address = server.accept()
             client1_socket.send("640,480,left".encode())
+            print('reconnected!')
 
 
     # ready_to_play = False
