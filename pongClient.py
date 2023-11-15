@@ -208,7 +208,6 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
         screenWidth, screenHeight, playerPaddle = map(str, server_data)
         screenWidth = int(screenWidth)
         screenHeight = int(screenHeight)
-        print(server_data)
 
         client.settimeout(.1)  # timeout after .5 second, smaller than server timeout
         if playerPaddle == "left":      # client 1 will wait for client 2 to join before starting game
