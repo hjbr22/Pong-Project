@@ -18,19 +18,6 @@ from assets.code.helperCode import *
 # to suit your needs.
 def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.socket) -> None:
     print("playgame!")
-    # client.settimeout(1)  # timeout after 1 second, smaller than server timeout
-    # startMsg = ""
-    # while startMsg != "START":
-    #     try:
-    #         sendMsg = "JOIN"
-    #         client.send(sendMsg.encode())
-    #         print('sent JOIN')
-    #         # Attempt to receive a message
-    #         startMsg = client.recv(1024).decode()
-    #     except socket.timeout:
-    #         continue
-    # client.settimeout(None)
-
 
     # Pygame inits
     pygame.mixer.pre_init(44100, -16, 2, 2048)
@@ -68,12 +55,9 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
     else:
         opponentPaddleObj = leftPaddle
         playerPaddleObj = rightPaddle
-
     lScore = 0
     rScore = 0
-
     sync = 0
-
     while True:
         # Wiping the screen
         screen.fill((0,0,0))
@@ -93,19 +77,10 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
 
             elif event.type == pygame.KEYUP:
                 playerPaddleObj.moving = ""
-
         # =========================================================================================
         # Your code here to send an update to the server on your paddle's information,
         # where the ball is and the current score.
         # Feel free to change when the score is updated to suit your needs/requirements
-        
-        # NOTES FROM RYAN: Things that will probably be encoded and sent to server & decoded and receieved from server
-        # 
-        # paddle.moving seems to be the info on paddles movement (shocker)
-        # lscore and rscore are each players score
-        # sync variable will be used to sync up clients when they... get out of sync
-        # i dont know exactly what will be used to hold the balls position info
-        # END OF RYANS NOTES
         try:
             # Client sends encoded message with game info
             sendInfo = playerPaddleObj.moving + "/" + str(lScore) + "/" + str(rScore) + "/" + str(sync) + "/" + \
@@ -123,7 +98,6 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
             elif rec_sync == -1:
                 client.close()
                 print(recInfo)
-                time.sleep(3)
                 discText = "Opponent Disconnected!"
                 textSurface = winFont.render(discText, False, WHITE, (0, 0, 0))
                 textRect = textSurface.get_rect()
@@ -134,6 +108,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
                 textRect = textSurface.get_rect()
                 textRect.center = ((screenWidth / 2), screenHeight / 3)
                 discMessage = screen.blit(textSurface, textRect)
+                pygame.display.update()
                 time.sleep(3)
                 pygame.quit()
                 sys.exit()
@@ -230,7 +205,6 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
         # client.send("JOIN".encode())
         # print("CLIENT JOIN")    # debugging reference
         server_data = client.recv(1024).decode().split(",")
-        print('made it here', server_data)
         screenWidth, screenHeight, playerPaddle = map(str, server_data)
         screenWidth = int(screenWidth)
         screenHeight = int(screenHeight)
@@ -238,22 +212,16 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
 
         client.settimeout(.1)  # timeout after .5 second, smaller than server timeout
         if playerPaddle == "left":      # client 1 will wait for client 2 to join before starting game
+            print('You have connected! Waiting for an opponent...')
             startMsg = ""
             while startMsg != "START":  # client 1 recieves the go-ahead from the server that client 2 is ready
                 try:
                     client.send("/HERE".encode())    # Lets server know that client 1 is still connected
                     startMsg = client.recv(1024).decode()
-                    print(f'received startMsg: {startMsg}')
+                    print(f'Opponent has arrived!')
                 except socket.timeout:
                     continue
         client.settimeout(None)
-
-        # If you have messages you'd like to show the user use the errorLabel widget like so
-        # errorLabel.config(text=f"Connected to the server.\nScreen Width: {screenWidth}, Screen Height: {screenHeight}")
-        # You may or may not need to call this, depending on how many times you update the label
-        # errorLabel.update()     
-        # Close this window and start the game with the info passed to you from the server
-        # app.withdraw()     # Hides the window (we'll kill it later)
         playGame(screenWidth, screenHeight, playerPaddle, client)  # User will be either left or right paddle
         app.quit()         # Kills the window
     except ConnectionRefusedError:
