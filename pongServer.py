@@ -28,18 +28,20 @@ def flushSocket(socket):
         pass  # There's no more data to read
     socket.setblocking(1)  #set socket back to blocking mode
 
-def f1(client1Socket, client2Socket):
+def f1(receivingSocket, sendingSocket):
     print("The game is running")
-    flushSocket(client1Socket)
+    flushSocket(receivingSocket)
     while True:
         try:
-            msg = client1Socket.recv(1024)  # receive info from client1
+            msg = receivingSocket.recv(1024)  # receive info from client1
             if not msg:
                 print("No message received, client may have disconnected.")
                 break  # Exit the loop if no message is received
-            client2Socket.send(msg)
+            sendingSocket.send(msg)
         except socket.error as e:
             print(f"Socket error occurred: {e}")
+            sendInfo = "0/0/0/-1/0/0"
+            sendingSocket.send(sendInfo.encode())
             break  # Exit the loop in case of socket error
 
         except Exception as e:

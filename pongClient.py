@@ -81,7 +81,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         # Getting keypress events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                print('MADE IT TO PYGAME QUIT')
+                print('You quit the game')
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
@@ -111,10 +111,8 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
             sendInfo = playerPaddleObj.moving + "/" + str(lScore) + "/" + str(rScore) + "/" + str(sync) + "/" + \
                        str(ball.rect.x) + "/" + str(ball.rect.y)
             client.send(sendInfo.encode())
-            print(f'SENT GAME DATA: {sendInfo}')
             # Client received encoded message from server
             recInfo = client.recv(1024).decode().split("/")
-            print(f'REC GAME DATA: {recInfo}')
             opponentPaddleObj.moving, rec_lScore_str, rec_rScore_str, rec_sync_str, rec_ball_x_str, rec_ball_y_str = map(str, recInfo)
             rec_lScore, rec_rScore, rec_sync, rec_ball_x, rec_ball_y = int(rec_lScore_str), int(rec_rScore_str), int(rec_sync_str), float(rec_ball_x_str), float(rec_ball_y_str)
             if rec_sync > sync:
@@ -122,6 +120,13 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
                 ball.rect.y = rec_ball_y
                 lScore = rec_lScore
                 rScore = rec_rScore
+            elif rec_sync == -1:
+                discText = "Opponent Rage Quit/Disconnected!"
+                textSurface = winFont.render(discText, False, WHITE, (0, 0, 0))
+                textRect = textSurface.get_rect()
+                textRect.center = ((screenWidth / 2), screenHeight / 4)
+                discMessage = screen.blit(textSurface, textRect)
+                client.close()
         except socket.error as e:
             print(f"socket error occured: {e}")
         # =========================================================================================
