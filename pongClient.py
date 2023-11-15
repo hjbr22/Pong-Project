@@ -1,8 +1,8 @@
 # =================================================================================================
 # Contributing Authors:	    Ryan Ennis, Hunter Brogna, Evan Damron
 # Email Addresses:          ryan.ennis@uky.edu, hjbr230@uky.edu, evan.damron@uky.edu
-# Date:                     11/12/2023
-# Purpose:                  Started planning out encoding/decoding formatting
+# Date:                     11/15/2023
+# Purpose:                  Completed Code
 # Misc:                     <Not Required.  Anything else you might want to include>
 # =================================================================================================
 
