@@ -121,7 +121,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
             sendInfo = playerPaddleObj.moving + "/" + str(lScore) + "/" + str(rScore) + "/" + str(sync) + "/" + \
                        str(ball.rect.x) + "/" + str(ball.rect.y)
             client.send(sendInfo.encode())
-            print('SENT GAME DATA')
+            print(f'SENT GAME DATA: {sendInfo}')
             # Client received encoded message from server
             recInfo = client.recv(1024).decode().split("/")
             opponentPaddleObj.moving, rec_lScore_str, rec_rScore_str, rec_sync_str, rec_ball_x_str, rec_ball_y_str = map(str, recInfo)
@@ -229,7 +229,6 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
         # client.send("JOIN".encode())
         # print("CLIENT JOIN")    # debugging reference
         server_data = client.recv(1024).decode().split(",")
-        print('made it here', server_data)
         screenWidth, screenHeight, playerPaddle = map(str, server_data)
         screenWidth = int(screenWidth)
         screenHeight = int(screenHeight)

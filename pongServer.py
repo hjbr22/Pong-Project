@@ -23,7 +23,7 @@ def f1(client1Socket, client2Socket):
         try:
             print("f1 FUNCTION TEST")  # debugging reference
             msg = client1Socket.recv(1024)  # receive info from client1
-
+            print(f"received {msg.decode()}")
             if not msg:
                 print("No message received, client1 may have disconnected.")
                 break  # Exit the loop if no message is received
