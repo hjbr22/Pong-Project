@@ -17,7 +17,7 @@ from assets.code.helperCode import *
 # where you should add to the code are marked.  Feel free to change any part of this project
 # to suit your needs.
 def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.socket) -> None:
-    print("playgame!")
+    print("Playgame!")
 
     # Pygame inits
     pygame.mixer.pre_init(44100, -16, 2, 2048)
@@ -86,31 +86,38 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
             sendInfo = playerPaddleObj.moving + "/" + str(lScore) + "/" + str(rScore) + "/" + str(sync) + "/" + \
                        str(ball.rect.x) + "/" + str(ball.rect.y)
             client.send(sendInfo.encode())
-            # Client received encoded message from server
+
+            # Client receives encoded message from server
             recInfo = client.recv(1024).decode().split("/")
             opponentPaddleObj.moving, rec_lScore_str, rec_rScore_str, rec_sync_str, rec_ball_x_str, rec_ball_y_str = map(str, recInfo)
             rec_lScore, rec_rScore, rec_sync, rec_ball_x, rec_ball_y = int(rec_lScore_str), int(rec_rScore_str), int(rec_sync_str), float(rec_ball_x_str), float(rec_ball_y_str)
+            
+            # Use received info if opponents sync is ahead
             if rec_sync > sync:
                 ball.rect.x = rec_ball_x
                 ball.rect.y = rec_ball_y
                 lScore = rec_lScore
                 rScore = rec_rScore
-            elif rec_sync == -1:
+            elif rec_sync == -1:        # Opponent has disconnected
                 client.close()
-                print(recInfo)
+                 # Display message to client that opponent has disconnected
                 discText = "Opponent Disconnected!"
                 textSurface = winFont.render(discText, False, WHITE, (0, 0, 0))
                 textRect = textSurface.get_rect()
                 textRect.center = ((screenWidth / 2), screenHeight / 4)
                 discMessage = screen.blit(textSurface, textRect)
+
+                # Display message to client that game will close
                 discText = "closing game"
                 textSurface = winFont.render(discText, False, WHITE, (0, 0, 0))
                 textRect = textSurface.get_rect()
                 textRect.center = ((screenWidth / 2), screenHeight / 3)
                 discMessage = screen.blit(textSurface, textRect)
                 pygame.display.update()
+
+                # Wait 3 seconds then close game
                 time.sleep(3)
-                pygame.quit()
+                pygame.quit() 
                 sys.exit()
         except socket.error as e:
             print(f"socket error occured: {e}")
@@ -199,11 +206,10 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
         
         # Create a socket and connect to the server
         # You don't have to use SOCK_STREAM, use what you think is best
-        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)#DGRAM)
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client.connect((ip, int(port)))
-        # Inform the server that a new client is connecting
-        # client.send("JOIN".encode())
-        # print("CLIENT JOIN")    # debugging reference
+        
+        # Receive initial game data from server (screen size/ play side)
         server_data = client.recv(1024).decode().split(",")
         screenWidth, screenHeight, playerPaddle = map(str, server_data)
         screenWidth = int(screenWidth)
@@ -221,7 +227,8 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
                 except socket.timeout:
                     continue
         client.settimeout(None)
-        playGame(screenWidth, screenHeight, playerPaddle, client)  # User will be either left or right paddle
+
+        playGame(screenWidth, screenHeight, playerPaddle, client)  # User will start the game
         app.quit()         # Kills the window
     except ConnectionRefusedError:
         errorLabel.config(text="Connection to the server failed. Please check the IP and Port.")
@@ -262,10 +269,10 @@ def startScreen():
     app.mainloop()
 
 if __name__ == "__main__":
-    # startScreen()
+    startScreen()
     
     # Uncomment the line below if you want to play the game without a server to see how it should work
     # the startScreen() function should call playGame with the arguments given to it by the server this is
     # here for demo purposes only
     # playGame(640, 480,"left",socket.socket(socket.AF_INET, socket.SOCK_STREAM))
-    joinServer("10.47.184.199", "64920", tk.Label(text=""), tk.Tk())
+    # joinServer("10.47.184.199", "64920", tk.Label(text=""), tk.Tk())
