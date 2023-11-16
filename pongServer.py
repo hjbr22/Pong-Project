@@ -1,8 +1,10 @@
 # =================================================================================================
+
 # Contributing Authors:	    Ryan Ennis, Evan Damron
 # Email Addresses:          ryan.ennis@uky.edu, evan.damron@uky.edu
 # Date:                     11/15/2023
 # Purpose:                  Completed Code
+
 # Misc:                     <Not Required.  Anything else you might want to include>
 # =================================================================================================
 
@@ -118,3 +120,4 @@ if __name__ == "__main__":
         client1_socket.close()
         client2_socket.close()
         server.close()
+

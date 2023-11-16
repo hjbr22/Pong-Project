@@ -1,8 +1,10 @@
 # =================================================================================================
+
 # Contributing Authors:	    Ryan Ennis, Hunter Brogna, Evan Damron
 # Email Addresses:          ryan.ennis@uky.edu, hjbr230@uky.edu, evan.damron@uky.edu
 # Date:                     11/15/2023
 # Purpose:                  Completed Code
+
 # Misc:                     <Not Required.  Anything else you might want to include>
 # =================================================================================================
 
@@ -17,7 +19,9 @@ from assets.code.helperCode import *
 # where you should add to the code are marked.  Feel free to change any part of this project
 # to suit your needs.
 def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.socket) -> None:
+
     print("Playgame!")
+
 
     # Pygame inits
     pygame.mixer.pre_init(44100, -16, 2, 2048)
@@ -26,6 +30,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
     # Constants
     WHITE = (255,255,255)
     clock = pygame.time.Clock()
+
     scoreFont = pygame.font.Font("./assets/fonts/pong-score.ttf", 32)
     winFont = pygame.font.Font("./assets/fonts/visitor.ttf", 48)
     pointSound = pygame.mixer.Sound("./assets/sounds/point.wav")
@@ -55,9 +60,11 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
     else:
         opponentPaddleObj = leftPaddle
         playerPaddleObj = rightPaddle
+
     lScore = 0
     rScore = 0
     sync = 0
+
     while True:
         # Wiping the screen
         screen.fill((0,0,0))
@@ -65,7 +72,9 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         # Getting keypress events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+
                 print('You quit the game')
+
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
@@ -77,10 +86,12 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
 
             elif event.type == pygame.KEYUP:
                 playerPaddleObj.moving = ""
+
         # =========================================================================================
         # Your code here to send an update to the server on your paddle's information,
         # where the ball is and the current score.
         # Feel free to change when the score is updated to suit your needs/requirements
+
         try:
             # Client sends encoded message with game info
             sendInfo = playerPaddleObj.moving + "/" + str(lScore) + "/" + str(rScore) + "/" + str(sync) + "/" + \
@@ -121,6 +132,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
                 sys.exit()
         except socket.error as e:
             print(f"socket error occured: {e}")
+
         # =========================================================================================
 
         # Update the player paddle and opponent paddle's location on the screen
@@ -131,6 +143,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
             elif paddle.moving == "up":
                 if paddle.rect.topleft[1] > 10:
                     paddle.rect.y -= paddle.speed
+
         # If the game is over, display the win message
         if lScore > 4 or rScore > 4:
             winText = "Player 1 Wins! " if lScore > 4 else "Player 2 Wins! "
@@ -139,6 +152,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
             textRect.center = ((screenWidth/2), screenHeight/2)
             winMessage = screen.blit(textSurface, textRect)
         else:
+
             # ==== Ball Logic =====================================================================
             ball.updatePos()
 
@@ -151,6 +165,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
                 rScore += 1
                 pointSound.play()
                 ball.reset(nowGoing="right")
+
             # If the ball hits a paddle
             if ball.rect.colliderect(playerPaddleObj.rect):
                 bounceSound.play()
@@ -174,11 +189,13 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
         # Drawing the player's new location
         for paddle in [playerPaddleObj, opponentPaddleObj]:
             pygame.draw.rect(screen, WHITE, paddle)
+
         pygame.draw.rect(screen, WHITE, topWall)
         pygame.draw.rect(screen, WHITE, bottomWall)
         scoreRect = updateScore(lScore, rScore, screen, WHITE, scoreFont)
         pygame.display.update()
         clock.tick(60)
+
         # This number should be synchronized between you and your opponent.  If your number is larger
         # then you are ahead of them in time, if theirs is larger, they are ahead of you, and you need to
         # catch up (use their info)
@@ -197,6 +214,7 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
 # If you want to hard code the screen's dimensions into the code, that's fine, but you will need to know
 # which client is which
 def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
+
     try:   # Purpose:      This method is fired when the join button is clicked
         # Arguments:
         # ip            A string holding the IP address of the server
@@ -238,6 +256,7 @@ def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
         errorLabel.update()
 
 
+
 # This displays the opening screen, you don't need to edit this (but may if you like)
 def startScreen():
     app = tk.Tk()
@@ -269,10 +288,14 @@ def startScreen():
     app.mainloop()
 
 if __name__ == "__main__":
+
     startScreen()
+
     
     # Uncomment the line below if you want to play the game without a server to see how it should work
     # the startScreen() function should call playGame with the arguments given to it by the server this is
     # here for demo purposes only
+
     playGame(640, 480,"left",socket.socket(socket.AF_INET, socket.SOCK_STREAM))
     # joinServer("10.47.184.199", "64920", tk.Label(text=""), tk.Tk())
+
