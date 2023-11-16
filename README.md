@@ -3,8 +3,9 @@ Contact Info
 
 Group Members & Email Addresses:
 
-    Person 1, person1@uky.edu
-    Person 2, person2@uky.edu
+    Evan Damron, evan.damron@uky.edu
+    Ryan Ennis, ryan.ennis@uky.edu
+    Hunter Brogna, hjbr230@uky.edu
 
 Versioning
 ==========
