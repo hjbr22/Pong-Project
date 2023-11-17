@@ -19,6 +19,10 @@ from assets.code.helperCode import *
 # where you should add to the code are marked.  Feel free to change any part of this project
 # to suit your needs.
 def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.socket) -> None:
+    # Author:       Ryan Ennis, Evan Damron
+    # Purpose:      This function allows the game to be played as well as synced together between the two clients playing the game
+    # Pre:          For this function to occur, both clients must be connected to the server as well as having a stable internet connection
+    # Post:         When the game is finished, the program will be complete, and the game will be over
 
     print("Playgame!")
 
@@ -214,14 +218,13 @@ def playGame(screenWidth:int, screenHeight:int, playerPaddle:str, client:socket.
 # If you want to hard code the screen's dimensions into the code, that's fine, but you will need to know
 # which client is which
 def joinServer(ip:str, port:str, errorLabel:tk.Label, app:tk.Tk) -> None:
+        # Author:       Hunter Brogna, Ryan Ennis, Evan Damron
+        # Purpose:      This method is fired when the join button is clicked. It allows the clients to be able to conenct to the server
+        # Arguments:    IP, Port, Any Labels that are needed, TK App
+        # Pre:          We needed to be able to connect the clients to the servers when the values are inputted in
+        # Post:         After this is called, the clients will be connected to the server via the IP and the Port that they put in
 
-    try:   # Purpose:      This method is fired when the join button is clicked
-        # Arguments:
-        # ip            A string holding the IP address of the server
-        # port          A string holding the port the server is using
-        # errorLabel    A tk label widget, modify it's text to display messages to the user (example below)
-        # app           The tk window object, needed to kill the window
-        
+    try:   
         # Create a socket and connect to the server
         # You don't have to use SOCK_STREAM, use what you think is best
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -289,13 +292,13 @@ def startScreen():
 
 if __name__ == "__main__":
 
-    startScreen()
+    # startScreen()
 
     
     # Uncomment the line below if you want to play the game without a server to see how it should work
     # the startScreen() function should call playGame with the arguments given to it by the server this is
     # here for demo purposes only
 
-    playGame(640, 480,"left",socket.socket(socket.AF_INET, socket.SOCK_STREAM))
-    # joinServer("10.47.184.199", "64920", tk.Label(text=""), tk.Tk())
+    # playGame(640, 480,"left",socket.socket(socket.AF_INET, socket.SOCK_STREAM))
+    joinServer("10.47.184.199", "64920", tk.Label(text=""), tk.Tk())
 

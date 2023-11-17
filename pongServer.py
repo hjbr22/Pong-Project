@@ -21,7 +21,11 @@ import time
 # clients are and take actions to resync the games
 
 
-def flushSocket(socket):    # Clears the sockets buffer
+def flushSocket(socket) -> None:    # Clears the sockets buffer
+    # Author:       Evan Damron
+    # Purpose:      This function aids in clearing the buffers for the socket
+    # Pre:          The socket has to be established beforehand
+    # Post:         The socket buffers will be clear
     socket.setblocking(0)  # Set socket to non-blocking mode
     try:
         while True:  # Attempt to read continuously until no more data
@@ -32,7 +36,11 @@ def flushSocket(socket):    # Clears the sockets buffer
         pass  # There's no more data to read
     socket.setblocking(1)  #set socket back to blocking mode
 
-def f1(receivingSocket, sendingSocket):     # Relay game info between clients
+def f1(receivingSocket, sendingSocket) -> None:     # Relay game info between clients
+    # Author:       Ryan Ennis, Evan Damron
+    # Purpose:      This function allows the game info from each client to be relayed between the two clients
+    # Pre:          The two clients have to be established and playing the game
+    # Post:         While playing the game, the info will be relayed between the two clients
     print("The game is running")
     flushSocket(receivingSocket)
 
@@ -54,7 +62,11 @@ def f1(receivingSocket, sendingSocket):     # Relay game info between clients
             sendingSocket.send(sendInfo.encode())
             break  # Exit the loop in case of any other exception
 
-def clientStillHere(client_socket):     # Checks if client1 is still present prior to client2's connection
+def clientStillHere(client_socket) -> bool:     # Checks if client1 is still present prior to client2's connection
+    # Author:       Evan Damron
+    # Purpose:      This function allows the players to know if both of the clients are still present and connected to the server
+    # Pre:          Both clients have to be established and connected
+    # Post:         During the game, if a player is disconnected, the game will stop and tell the other client
     try:
         client_socket.settimeout(.5)
         messages = client_socket.recv(1024).decode()
